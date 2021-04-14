@@ -19,7 +19,7 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { apod } = state
+    let { mars } = state
 
     return `
         <header></header>
@@ -36,7 +36,7 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(apod)}
+                ${RoverImages(mars)}
             </section>
         </main>
         <footer></footer>
@@ -91,7 +91,33 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
+const RoverImages = (mars) => {
+  if (!mars) {
+    const mars = getRoverImages(store)
+  }
+  const rover = mars["mars"].photos
+  const i = Math.floor(Math.random() * rover.length)
+  console.log(i)
+  return (`
+      <img src="${rover[i].img_src}" height="350px" width="100%" />
+      <p>Name: ${rover[i].rover.name}</p>
+      <p>Landing Date: ${rover[i].rover.landing_date}</p>
+      <p>Launch Date: ${rover[i].rover.launch_date}</p>
+      <p>Status: ${rover[i].rover.status}</p>
+    `)
+}
+
 // ------------------------------------------------------  API CALLS
+
+// API call for Rover images
+const getRoverImages = (state) => {
+  let { mars } = state
+  fetch(`http://localhost:3000/mars`)
+    .then(res => res.json())
+    .then(mars => updateStore(store, { mars }))
+  return mars
+}
+
 // Example API call
 const getImageOfTheDay = (state) => {
     let { apod } = state
