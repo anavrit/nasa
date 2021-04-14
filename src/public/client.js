@@ -2,6 +2,7 @@ let store = {
     user: { name: "Amit" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    mars: ''
 }
 
 // add our markup to the page
@@ -16,10 +17,9 @@ const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
-
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { apod } = state
 
     return `
         <header></header>
@@ -92,7 +92,6 @@ const ImageOfTheDay = (apod) => {
 }
 
 // ------------------------------------------------------  API CALLS
-
 // Example API call
 const getImageOfTheDay = (state) => {
     let { apod } = state
