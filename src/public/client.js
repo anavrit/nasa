@@ -1,17 +1,17 @@
 const Immutable = require('immutable');
 
-let store = {
+let store = Immutable.Map({
     user: { name: "Amit" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     mars: ''
-}
+});
 
 // add our markup to the page
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
+    store = store.merge(newState)
     render(root, store)
 }
 
@@ -27,6 +27,7 @@ const App = (state) => {
         <header></header>
         <main>
             ${Greeting(store.user.name)}
+            ${console.log("hello")}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>

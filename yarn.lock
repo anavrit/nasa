@@ -331,7 +331,7 @@
     "readable-stream" "^2.2.2"
     "typedarray" "^0.0.6"
 
-"console-browserify@^1.1.0":
+"console-browserify@^1.1.0", "console-browserify@^1.2.0":
   "integrity" "sha512-ZMkYO/LkF17QvCPqM0gxw8yUzigAOZOSWSHg91FH6orS7vcEj5dVZTidN2fQ14yBSdg97RqhSNwLUXInd52OTA=="
   "resolved" "https://registry.npmjs.org/console-browserify/-/console-browserify-1.2.0.tgz"
   "version" "1.2.0"
