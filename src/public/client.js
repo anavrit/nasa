@@ -1,3 +1,5 @@
+const Immutable = require('immutable');
+
 let store = {
     user: { name: "Amit" },
     apod: '',

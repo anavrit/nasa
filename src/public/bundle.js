@@ -5865,7 +5865,8 @@
 })));
 
 },{}],2:[function(require,module,exports){
-const Immutable = require('immutable')
+const Immutable = require('immutable');
+
 let store = {
     user: { name: "Amit" },
     apod: '',
@@ -5965,7 +5966,6 @@ const RoverImages = (mars) => {
   }
   const rover = mars["mars"].photos
   const i = Math.floor(Math.random() * rover.length)
-  console.log(i)
   return (`
       <img src="${rover[i].img_src}" height="350px" width="100%" />
       <p>Name: ${rover[i].rover.name}</p>
