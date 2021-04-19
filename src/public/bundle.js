@@ -5949,12 +5949,7 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const CuriosityImages = (state) => {
-  let { mars } = state.set()
-  if (!mars) {
-    mars = getRoverImages(state, 'curiosity')
-  }
-  const rover = mars.curiosity['photos'][0]
+const roverHTML = (rover) => {
   return (`
       <img src='${rover.img_src}' height='350px' width='100%' />
       <p>Name: ${rover.rover.name}</p>
@@ -5962,6 +5957,15 @@ const CuriosityImages = (state) => {
       <p>Launch Date: ${rover.rover.launch_date}</p>
       <p>Status: ${rover.rover.status}</p>
     `)
+}
+
+const CuriosityImages = (state) => {
+  let { mars } = state.set()
+  if (!mars) {
+    mars = getRoverImages(state, 'curiosity')
+  }
+  const rover = mars.curiosity['photos'][0]
+  return roverHTML(rover)
 }
 
 // ------------------------------------------------------  API CALLS

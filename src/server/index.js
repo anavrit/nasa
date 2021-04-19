@@ -23,6 +23,26 @@ app.get('/curiosity', async (req, res) => {
   }
 })
 
+app.get('/opportunity', async (req, res) => {
+  try {
+    let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?sol=1000&api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+        res.send( { opportunity })
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
+
+app.get('/spirit', async (req, res) => {
+  try {
+    let spirit = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=1000&api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+        res.send( { spirit })
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
+
 // example API call
 app.get('/apod', async (req, res) => {
     try {
