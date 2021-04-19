@@ -22,11 +22,22 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
    const rover = state.set()
+   let mars;
+   switch (roverName.value) {
+     case "opportunity":
+      mars = OpportunityImages(rover);
+      break;
+     case "spirit":
+      mars = SpiritImages(rover);
+      break;
+     default:
+      mars = CuriosityImages(rover);
+   }
     return `
         <header></header>
         <main>
             <section>
-                ${SpiritImages(rover)}
+                ${mars}
             </section>
         </main>
         <footer></footer>
