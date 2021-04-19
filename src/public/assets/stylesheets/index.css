@@ -16,8 +16,30 @@ main {
   padding: 20px;
 }
 
-#dropdownMenuButton1 {
-  background-color: #3371FF;
+img {
+  max-height: 50vh;
+  max-width: 50%;
+}
+
+.custom-select {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+#roverName {
+  width: 150px;
+  height: 33px;
+  color: #ffffff;
+  padding: 0px 8px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+  background-color: DodgerBlue;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
 }
 
 footer {
