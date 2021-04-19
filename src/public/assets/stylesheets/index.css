@@ -17,14 +17,20 @@ main {
 }
 
 img {
+  display: block;
   max-height: 50vh;
   max-width: 50%;
+  margin: auto;
 }
 
 .custom-select {
   position: relative;
   display: block;
   margin: 0 auto;
+}
+
+.info-center {
+  text-align: center;
 }
 
 /* With some help from w3schools custom-select css */

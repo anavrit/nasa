@@ -5962,11 +5962,16 @@ const ImageOfTheDay = (apod) => {
 
 const roverHTML = (rover) => {
   return (`
-      <img src='${rover.img_src}' height='350px' width='100%' />
-      <p>Name: ${rover.rover.name}</p>
-      <p>Landing Date: ${rover.rover.landing_date}</p>
-      <p>Launch Date: ${rover.rover.launch_date}</p>
-      <p>Status: ${rover.rover.status}</p>
+      <div class='info-center'>
+        <p><strong>Name:</strong> ${rover.rover.name}</p>
+        <p><strong>Status:</strong> ${rover.rover.status}</p>
+      </div>
+      <img src='${rover.img_src}' /><br>
+      <div class='info-center'>
+        <p><strong>Landing Date:</strong> ${rover.rover.landing_date}</p>
+        <p><strong>Launch Date:</strong> ${rover.rover.launch_date}</p>
+        <p><strong>Camera:</strong> ${rover.camera.full_name}</p>
+      </div>
     `)
 }
 
