@@ -5866,9 +5866,9 @@
 
 },{}],2:[function(require,module,exports){
 const Immutable = require('immutable');
+const roverName = document.getElementById('roverName');
 
 let store = Immutable.Map({
-    user: { name: "Amit" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     mars: ''
