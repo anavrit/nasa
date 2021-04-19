@@ -5893,7 +5893,7 @@ const App = (state) => {
         <header></header>
         <main>
             <section>
-                ${CuriosityImages(rover)}
+                ${SpiritImages(rover)}
             </section>
         </main>
         <footer></footer>
@@ -5957,6 +5957,24 @@ const roverHTML = (rover) => {
       <p>Launch Date: ${rover.rover.launch_date}</p>
       <p>Status: ${rover.rover.status}</p>
     `)
+}
+
+const SpiritImages = (state) => {
+  let { mars } = state.set()
+  if (!mars) {
+    mars = getRoverImages(state, 'spirit')
+  }
+  const rover = mars.spirit['photos'][0]
+  return roverHTML(rover)
+}
+
+const OpportunityImages = (state) => {
+  let { mars } = state.set()
+  if (!mars) {
+    mars = getRoverImages(state, 'opportunity')
+  }
+  const rover = mars.opportunity['photos'][0]
+  return roverHTML(rover)
 }
 
 const CuriosityImages = (state) => {
