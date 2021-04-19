@@ -13,11 +13,20 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul, li {
   font-weight: normal;
 }
 
+h1, h2, h3 {
+  text-align: center;
+}
+
+hr {
+    height: 1px;
+    margin-top: 10px;
+}
+
 ol, ul {
   list-style: none;
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  max-width: 50%;
+  height: 50vh;
 }

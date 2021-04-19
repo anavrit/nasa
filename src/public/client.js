@@ -21,25 +21,13 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { mars } = state
-
+   const rover = state.set()
     return `
         <header></header>
         <main>
-            ${Greeting(store.user.name)}
-            ${console.log("hello")}
+            ${Greeting(rover.getIn(["user", "name"]))}
             <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${RoverImages(mars)}
+                ${RoverImages(rover)}
             </section>
         </main>
         <footer></footer>
@@ -57,12 +45,12 @@ window.addEventListener('load', () => {
 const Greeting = (name) => {
     if (name) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            <p>Welcome, ${name}!</p>
         `
     }
 
     return `
-        <h1>Hello!</h1>
+        <h3>Hello!</h3>
     `
 }
 
@@ -94,18 +82,18 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const RoverImages = (mars) => {
+const RoverImages = (state) => {
+  let { mars } = state.set()
   if (!mars) {
-    const mars = getRoverImages(store)
+    mars = getRoverImages(state)
   }
-  const rover = mars["mars"].photos
-  const i = Math.floor(Math.random() * rover.length)
+  const rover = mars.mars['photos'][0]
   return (`
-      <img src="${rover[i].img_src}" height="350px" width="100%" />
-      <p>Name: ${rover[i].rover.name}</p>
-      <p>Landing Date: ${rover[i].rover.landing_date}</p>
-      <p>Launch Date: ${rover[i].rover.launch_date}</p>
-      <p>Status: ${rover[i].rover.status}</p>
+      <img src='${rover.img_src}' height='350px' width='100%' />
+      <p>Name: ${rover.rover.name}</p>
+      <p>Landing Date: ${rover.rover.landing_date}</p>
+      <p>Launch Date: ${rover.rover.launch_date}</p>
+      <p>Status: ${rover.rover.status}</p>
     `)
 }
 
@@ -113,7 +101,7 @@ const RoverImages = (mars) => {
 
 // API call for Rover images
 const getRoverImages = (state) => {
-  let { mars } = state
+  let { mars } = state.toJSON()
   fetch(`http://localhost:3000/mars`)
     .then(res => res.json())
     .then(mars => updateStore(store, { mars }))
