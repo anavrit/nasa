@@ -5893,7 +5893,7 @@ const App = (state) => {
         <header></header>
         <main>
             <section>
-                ${RoverImages(rover)}
+                ${CuriosityImages(rover)}
             </section>
         </main>
         <footer></footer>
@@ -5949,12 +5949,12 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const RoverImages = (state) => {
+const CuriosityImages = (state) => {
   let { mars } = state.set()
   if (!mars) {
-    mars = getRoverImages(state)
+    mars = getRoverImages(state, 'curiosity')
   }
-  const rover = mars.mars['photos'][0]
+  const rover = mars.curiosity['photos'][0]
   return (`
       <img src='${rover.img_src}' height='350px' width='100%' />
       <p>Name: ${rover.rover.name}</p>
@@ -5967,9 +5967,9 @@ const RoverImages = (state) => {
 // ------------------------------------------------------  API CALLS
 
 // API call for Rover images
-const getRoverImages = (state) => {
+const getRoverImages = (state, name) => {
   let { mars } = state.toJSON()
-  fetch(`http://localhost:3000/mars`)
+  fetch(`http://localhost:3000/${name}`)
     .then(res => res.json())
     .then(mars => updateStore(store, { mars }))
   return mars
@@ -5978,11 +5978,9 @@ const getRoverImages = (state) => {
 // Example API call
 const getImageOfTheDay = (state) => {
     let { apod } = state
-
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-
     return data
 }
 
