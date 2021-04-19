@@ -25,7 +25,6 @@ const App = (state) => {
     return `
         <header></header>
         <main>
-            ${Greeting(rover.getIn(["user", "name"]))}
             <section>
                 ${RoverImages(rover)}
             </section>
@@ -45,7 +44,8 @@ window.addEventListener('load', () => {
 const Greeting = (name) => {
     if (name) {
         return `
-            <p>Welcome, ${name}!</p>
+            <h3>Welcome, <strong>${name}</strong>!</h3>
+            <br />
         `
     }
 

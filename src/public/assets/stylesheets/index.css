@@ -16,6 +16,10 @@ main {
   padding: 20px;
 }
 
+#dropdownMenuButton1 {
+  background-color: #3371FF;
+}
+
 footer {
   /* footer styles */
 }
