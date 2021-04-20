@@ -61,6 +61,57 @@ footer {
   font-family: sans-serif;
 }
 
+.row {
+  margin: 0 auto !important;
+  width: 50%;
+}
+
+.row .column {
+  float: left;
+  width: 10%;
+  padding: 2px;
+}
+
+.row .column img {
+  opacity: 0.8;
+  cursor: pointer;
+  max-width: 100%;
+  max-height: 10vh;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.column img:hover {
+  opacity: 1;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.container {
+  margin: 0 auto !important;
+  width: 50%;
+  padding-top: 10px;
+  display: flex;
+}
+
+.container img {
+  max-width: 100%;
+  max-height: 50vh;
+}
+
+#imgtext {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  color: white;
+  font-size: 20px;
+}
+
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */

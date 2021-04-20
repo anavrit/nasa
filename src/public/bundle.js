@@ -5960,17 +5960,19 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const roverHTML = (rover) => {
+const roverHTML = (roverArray) => {
+  const galleryImages = roverArray.map(img => (`
+    <div class="column">
+      <img src='${img.img_src}' alt='Mars'>
+    </div>`)
+  )
   return (`
-      <div class='info-center'>
-        <p><strong>Name:</strong> ${rover.rover.name}</p>
-        <p><strong>Status:</strong> ${rover.rover.status}</p>
+      <div class='row'>
+        ${galleryImages.join(' ')}
       </div>
-      <img src='${rover.img_src}' /><br>
-      <div class='info-center'>
-        <p><strong>Landing Date:</strong> ${rover.rover.landing_date}</p>
-        <p><strong>Launch Date:</strong> ${rover.rover.launch_date}</p>
-        <p><strong>Camera:</strong> ${rover.camera.full_name}</p>
+      <div class='container'>
+        <img src='${roverArray[0].img_src}' id='expandedImg'/>
+        <div id='imgtext'></div>
       </div>
     `)
 }
@@ -5980,7 +5982,7 @@ const SpiritImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'spirit')
   }
-  const rover = mars.spirit['photos'][0]
+  const rover = mars.spirit['photos'].slice(0, 10)
   return roverHTML(rover)
 }
 
@@ -5989,7 +5991,7 @@ const OpportunityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'opportunity')
   }
-  const rover = mars.opportunity['photos'][0]
+  const rover = mars.opportunity['photos'].slice(0, 10)
   return roverHTML(rover)
 }
 
@@ -5998,7 +6000,7 @@ const CuriosityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'curiosity')
   }
-  const rover = mars.curiosity['photos'][0]
+  const rover = mars.curiosity['photos'].slice(0, 10)
   return roverHTML(rover)
 }
 
