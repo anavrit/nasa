@@ -9,6 +9,7 @@ body {
 
 header {
   background-color: #9ab973;
+  padding-bottom: 10px;
 }
 
 header h1 {
@@ -34,16 +35,13 @@ img {
   text-align: center;
 }
 
-.info-center {
-  text-align: center;
-}
-
 /* With some help from w3schools custom-select css */
 #roverName {
   width: 200px;
   height: 33px;
   color: #ffffff;
   padding: 0px 8px;
+  font-size: 18px;
   border: 1px solid transparent;
   border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
   cursor: pointer;
@@ -104,7 +102,9 @@ footer {
 }
 
 #imgText {
-  font-size: 20px;
+  margin: 0 auto;
+  width: 50%;
+  font-size: 14px;
   text-align: center;
 }
 

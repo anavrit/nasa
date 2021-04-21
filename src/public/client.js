@@ -5,7 +5,8 @@ let store = Immutable.Map({
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     mars: ''
 });
-let lastImage, lastRover, currentRover;
+let lastImage
+let lastRover = 'curiosity';
 
 // add our markup to the page
 const root = document.getElementById('root')
@@ -92,10 +93,13 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-const roverHTML = (roverArray) => {
+const roverHTML = (roverArray, name) => {
   let element;
-  if (lastImage == undefined) {
+  if (lastImage == undefined || lastRover != roverArray[0].rover.name.toLowerCase()) {
     lastImage = roverArray[0]
+  }
+  if (lastRover != roverArray[0].rover.name) {
+    lastRover = roverArray[0].rover.name.toLowerCase()
   }
   expandedImg.src = lastImage.img_src
   const thumbnails = (image, index) => {
@@ -110,7 +114,11 @@ const roverHTML = (roverArray) => {
   roverArray.forEach(thumbnails)
   return (`
       <div id='imgText'>
-        ${lastImage.rover.name}
+        <p><strong>Status:</strong> ${lastImage.rover.status}</p>
+        <p><strong>Camera:</strong> ${lastImage.camera.full_name}</p>
+        <p><strong>Earth date:</strong> ${lastImage.earth_date}</p>
+        <p><strong>Landing date:</strong> ${lastImage.rover.landing_date}</p>
+        <p><strong>Launch date:</strong> ${lastImage.rover.launch_date}</p>
       </div>
     `)
 }
@@ -121,7 +129,7 @@ const SpiritImages = (state) => {
     mars = getRoverImages(state, 'spirit')
   }
   const rover = mars.spirit['photos'].slice(0, 5)
-  return roverHTML(rover)
+  return roverHTML(rover, 'spirit')
 }
 
 const OpportunityImages = (state) => {
@@ -130,7 +138,7 @@ const OpportunityImages = (state) => {
     mars = getRoverImages(state, 'opportunity')
   }
   const rover = mars.opportunity['photos'].slice(0, 5)
-  return roverHTML(rover)
+  return roverHTML(rover, 'opportunity')
 }
 
 const CuriosityImages = (state) => {
@@ -139,7 +147,7 @@ const CuriosityImages = (state) => {
     mars = getRoverImages(state, 'curiosity')
   }
   const rover = mars.curiosity['photos'].slice(0, 5)
-  return roverHTML(rover)
+  return roverHTML(rover, 'curiosity')
 }
 
 // ------------------------------------------------------  API CALLS
