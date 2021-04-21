@@ -68,7 +68,7 @@ footer {
 
 .row .column {
   float: left;
-  width: 10%;
+  width: 20%;
   padding: 2px;
 }
 
@@ -95,21 +95,17 @@ footer {
 .container {
   margin: 0 auto !important;
   width: 50%;
-  padding-top: 10px;
-  display: flex;
+  display: block;
 }
 
-.container img {
+#expandedImg {
   max-width: 100%;
   max-height: 50vh;
 }
 
-#imgtext {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  color: white;
+#imgText {
   font-size: 20px;
+  text-align: center;
 }
 
 /* -------------------  TABLET  --------------------- */

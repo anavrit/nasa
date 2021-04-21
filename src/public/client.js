@@ -1,14 +1,17 @@
 const Immutable = require('immutable');
-const roverName = document.getElementById('roverName');
 
 let store = Immutable.Map({
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     mars: ''
 });
+let lastImage, lastRover, currentRover;
 
 // add our markup to the page
 const root = document.getElementById('root')
+const roverName = document.getElementById('roverName');
+const expandedImg = document.getElementById('expandedImg');
+const imgText = document.getElementById('imgText');
 
 const updateStore = (store, newState) => {
     store = store.merge(newState)
@@ -34,13 +37,9 @@ const App = (state) => {
       mars = CuriosityImages(rover);
    }
     return `
-        <header></header>
         <main>
-            <section>
-                ${mars}
-            </section>
+          ${mars}
         </main>
-        <footer></footer>
     `
 }
 
@@ -94,18 +93,24 @@ const ImageOfTheDay = (apod) => {
 }
 
 const roverHTML = (roverArray) => {
-  const galleryImages = roverArray.map(img => (`
-    <div class="column">
-      <img src='${img.img_src}' alt='Mars'>
-    </div>`)
-  )
+  let element;
+  if (lastImage == undefined) {
+    lastImage = roverArray[0]
+  }
+  expandedImg.src = lastImage.img_src
+  const thumbnails = (image, index) => {
+    const imageID = 'image' + index
+    element = document.getElementById(imageID)
+    element.src = image.img_src
+    element.addEventListener('click', function() {
+      expandedImg.src = image.img_src
+      lastImage = image
+    })
+  }
+  roverArray.forEach(thumbnails)
   return (`
-      <div class='row'>
-        ${galleryImages.join(' ')}
-      </div>
-      <div class='container'>
-        <img src='${roverArray[0].img_src}' id='expandedImg'/>
-        <div id='imgtext'></div>
+      <div id='imgText'>
+        ${lastImage.rover.name}
       </div>
     `)
 }
@@ -115,7 +120,7 @@ const SpiritImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'spirit')
   }
-  const rover = mars.spirit['photos'].slice(0, 10)
+  const rover = mars.spirit['photos'].slice(0, 5)
   return roverHTML(rover)
 }
 
@@ -124,7 +129,7 @@ const OpportunityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'opportunity')
   }
-  const rover = mars.opportunity['photos'].slice(0, 10)
+  const rover = mars.opportunity['photos'].slice(0, 5)
   return roverHTML(rover)
 }
 
@@ -133,7 +138,7 @@ const CuriosityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'curiosity')
   }
-  const rover = mars.curiosity['photos'].slice(0, 10)
+  const rover = mars.curiosity['photos'].slice(0, 5)
   return roverHTML(rover)
 }
 
