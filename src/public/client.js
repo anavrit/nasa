@@ -30,18 +30,17 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-   const rover = state.set()
-   let mars;
-   switch (roverName.value) {
-     case "opportunity":
-      mars = OpportunityImages(rover);
-      break;
-     case "spirit":
-      mars = SpiritImages(rover);
-      break;
-     default:
-      mars = CuriosityImages(rover);
-   }
+    let mars;
+    switch (roverName.value) {
+      case "opportunity":
+       mars = OpportunityImages(state);
+       break;
+      case "spirit":
+       mars = SpiritImages(state);
+       break;
+      default:
+       mars = CuriosityImages(state);
+    }
     return `
         <main>
           ${mars}
@@ -130,7 +129,7 @@ const roverHTML = (roverArray, name) => {
 }
 
 const SpiritImages = (state) => {
-  let { mars } = state.set()
+  let { mars } = state
   if (!mars) {
     mars = getRoverImages(state, 'spirit')
   }
@@ -139,7 +138,7 @@ const SpiritImages = (state) => {
 }
 
 const OpportunityImages = (state) => {
-  let { mars } = state.set()
+  let { mars } = state
   if (!mars) {
     mars = getRoverImages(state, 'opportunity')
   }
@@ -148,7 +147,7 @@ const OpportunityImages = (state) => {
 }
 
 const CuriosityImages = (state) => {
-  let { mars } = state.set()
+  let { mars } = state
   if (!mars) {
     mars = getRoverImages(state, 'curiosity')
   }
