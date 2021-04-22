@@ -1,14 +1,12 @@
 const Immutable = require('immutable');
 
 let store = Immutable.Map({
-    apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-    mars: ''
+    rover: '',
+    mars: '',
+    startIndex: 0,
+    clicks: 0
 });
 let lastImage;
-let lastRover = 'curiosity';
-let startIndex = 0;
-let clicks = 0;
 let previousClicks = 0;
 
 // add our markup to the page
@@ -30,20 +28,10 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let mars;
-    switch (roverName.value) {
-      case "opportunity":
-       mars = OpportunityImages(state);
-       break;
-      case "spirit":
-       mars = SpiritImages(state);
-       break;
-      default:
-       mars = CuriosityImages(state);
-    }
+    let newState = state.set('rover', roverName.value)
     return `
         <main>
-          ${mars}
+          ${MarsImages(newState)}
         </main>
     `
 }
@@ -53,162 +41,86 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
-// ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h3>Welcome, <strong>${name}</strong>!</h3>
-            <br />
-        `
-    }
-
-    return `
-        <h3>Hello!</h3>
-    `
+roverName.onchange = () => {
+  const newState = store.set('rover', roverName.value).set('startIndex', 0)
+  updateStore(store, newState)
 }
 
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
+const nextClick = () => {
+  return console.log("Next")
 }
+const previousClick = () => {
+  return console.log("Previous")
+}
+next.addEventListener('click', nextClick)
+previous.addEventListener('click', previousClick)
 
-const roverHTML = (roverArray, name) => {
+const roverHTML = (state, roverArraySlice) => {
   let element;
-  if (lastImage == undefined || lastRover != roverArray[0].rover.name.toLowerCase() || previousClicks != clicks) {
-    lastImage = roverArray[0]
-  }
-  if (lastRover != roverArray[0].rover.name.toLowerCase()) {
-    lastRover = roverArray[0].rover.name.toLowerCase()
-  }
-  previousClicks = clicks
-  expandedImg.src = lastImage.img_src
+  let expandedImage = roverArraySlice[0]
+  expandedImg.src = roverArraySlice[0].img_src
   const thumbnails = (image, index) => {
     const imageID = 'image' + index
     element = document.getElementById(imageID)
     element.src = image.img_src
     element.addEventListener('click', function() {
       expandedImg.src = image.img_src
-      lastImage = image
+      expandedImage = image
     })
   }
-  roverArray.forEach(thumbnails)
+  roverArraySlice.forEach(thumbnails)
+  showOrHideButtons(state)
   return (`
       <div id='imgText'>
-        <p><strong>Status:</strong> ${lastImage.rover.status}</p>
-        <p><strong>Camera:</strong> ${lastImage.camera.full_name}</p>
-        <p><strong>Earth date:</strong> ${lastImage.earth_date}</p>
-        <p><strong>Landing date:</strong> ${lastImage.rover.landing_date}</p>
-        <p><strong>Launch date:</strong> ${lastImage.rover.launch_date}</p>
+        <p><strong>Status:</strong> ${expandedImage.rover.status}</p>
+        <p><strong>Camera:</strong> ${expandedImage.camera.full_name}</p>
+        <p><strong>Earth date:</strong> ${expandedImage.earth_date}</p>
+        <p><strong>Landing date:</strong> ${expandedImage.rover.landing_date}</p>
+        <p><strong>Launch date:</strong> ${expandedImage.rover.launch_date}</p>
       </div>
     `)
 }
 
-const SpiritImages = (state) => {
-  let { mars } = state
-  if (!mars) {
-    mars = getRoverImages(state, 'spirit')
+const MarsImages = (state) => {
+  let mars = state.get('mars')
+  const rover = state.get('rover')
+  if (mars==='') {
+    mars = getRoverImages(rover)
   }
-  const rover = getRoverImagesSlice(mars.spirit['photos'])
-  return roverHTML(rover, 'spirit')
+  const roverArraySlice = getRoverImagesSlice(store, mars[rover]['photos'])
+  return roverHTML(state, roverArraySlice)
 }
 
-const OpportunityImages = (state) => {
-  let { mars } = state
-  if (!mars) {
-    mars = getRoverImages(state, 'opportunity')
-  }
-  const rover = getRoverImagesSlice(mars.opportunity['photos'])
-  return roverHTML(rover, 'opportunity')
-}
-
-const CuriosityImages = (state) => {
-  let { mars } = state
-  if (!mars) {
-    mars = getRoverImages(state, 'curiosity')
-  }
-  const rover = getRoverImagesSlice(mars.curiosity['photos'])
-  return roverHTML(rover, 'curiosity')
-}
-
-const getRoverImagesSlice = (roverArray) => {
-  if (lastRover != roverArray[0].rover.name.toLowerCase()) {
-    startIndex = 0
-  }
-  let idx = startIndex
+const getRoverImagesSlice = (state, roverArray) => {
+  const rover = state.get('rover')
+  let idx = state.get('startIndex')
   let arraySlice = roverArray.slice(idx,idx+5)
-  const nextClick = () => {
-    idx += 5
-    startIndex = idx
-    clicks++
-    arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
-  }
-  const previousClick = () => {
-    idx -= 5
-    startIndex = idx
-    clicks++
-    arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
-  }
+  return arraySlice
+}
+
+const showOrHideButtons = (state) => {
+  const idx = state.get('startIndex')
+  const rover = state.get('rover')
+  const roverArray = state.getIn(['mars', rover, 'photos'])
   if (roverArray[idx+5] != undefined && idx >=5) {
     next.style.display = 'block';
     previous.style.display = 'block';
-    next.addEventListener('click', nextClick)
-    previous.addEventListener('click', previousClick)
   } else if (roverArray[idx+5] != undefined && idx < 5) {
     next.style.display = 'block';
     previous.style.display = 'none';
-    next.addEventListener('click', nextClick)
   } else if (roverArray[idx+5] == undefined && idx >= 5) {
     next.style.display = 'none';
     previous.style.display = 'block';
-    previous.addEventListener('click', previousClick)
   } else {
     next.style.display = 'none';
     previous.style.display = 'none';
   }
-  return arraySlice
 }
 
-// ------------------------------------------------------  API CALLS
-
 // API call for Rover images
-const getRoverImages = (state, name) => {
-  let { mars } = state.toJSON()
-  fetch(`http://localhost:3000/${name}`)
+const getRoverImages = (rover) => {
+  fetch(`http://localhost:3000/${rover}`)
     .then(res => res.json())
     .then(mars => updateStore(store, { mars }))
   return mars
-}
-
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-    return data
 }
