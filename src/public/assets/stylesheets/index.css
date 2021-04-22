@@ -108,6 +108,10 @@ footer {
   text-align: center;
 }
 
+.buttons {
+  margin-top: 10px;
+}
+
 #previous {
   float: left;
   width: 20%;

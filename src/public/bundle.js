@@ -5872,14 +5872,17 @@ let store = Immutable.Map({
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     mars: ''
 });
-let lastImage
+let lastImage;
 let lastRover = 'curiosity';
+let startIndex = 0;
 
 // add our markup to the page
 const root = document.getElementById('root')
 const roverName = document.getElementById('roverName');
 const expandedImg = document.getElementById('expandedImg');
 const imgText = document.getElementById('imgText');
+const previous = document.getElementById('previous');
+const next = document.getElementById('next');
 
 const updateStore = (store, newState) => {
     store = store.merge(newState)
@@ -5995,7 +5998,10 @@ const SpiritImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'spirit')
   }
-  const rover = mars.spirit['photos'].slice(0, 5)
+  if (lastRover != mars.curiosity['photos'][0].rover.name.toLowerCase()) {
+    startIndex = 0
+  }
+  const rover = getRoverImagesSlice(mars.curiosity['photos'])
   return roverHTML(rover, 'spirit')
 }
 
@@ -6004,7 +6010,10 @@ const OpportunityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'opportunity')
   }
-  const rover = mars.opportunity['photos'].slice(0, 5)
+  if (lastRover != mars.curiosity['photos'][0].rover.name.toLowerCase()) {
+    startIndex = 0
+  }
+  const rover = getRoverImagesSlice(mars.curiosity['photos'])
   return roverHTML(rover, 'opportunity')
 }
 
@@ -6013,8 +6022,46 @@ const CuriosityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'curiosity')
   }
-  const rover = mars.curiosity['photos'].slice(0, 5)
+  const rover = getRoverImagesSlice(mars.curiosity['photos'])
   return roverHTML(rover, 'curiosity')
+}
+
+const getRoverImagesSlice = (roverArray) => {
+  if (lastRover != roverArray[0].rover.name.toLowerCase()) {
+    startIndex = 0
+  }
+  let idx = startIndex
+  let arraySlice = roverArray.slice(idx,idx+5)
+  const nextClick = () => {
+    idx += 5
+    startIndex = idx
+    arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
+  }
+  const previousClick = () => {
+    idx -= 5
+    startIndex = idx
+    arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
+  }
+  if (roverArray[idx+5] != undefined && idx >=5) {
+    next.style.display = 'block';
+    previous.style.display = 'block';
+    next.addEventListener('click', nextClick)
+    previous.addEventListener('click', previousClick)
+  } else if (roverArray[idx+5] != undefined && idx < 5) {
+    next.style.display = 'block';
+    previous.style.display = 'none';
+    next.addEventListener('click', nextClick)
+  } else if (roverArray[idx+5] == undefined && idx >= 5) {
+    next.style.display = 'none';
+    previous.style.display = 'block';
+    previous.addEventListener('click', previousClick)
+  } else {
+    next.style.display = 'none';
+    previous.style.display = 'none';
+  }
+
+  console.log(idx, startIndex)
+  return arraySlice
 }
 
 // ------------------------------------------------------  API CALLS
