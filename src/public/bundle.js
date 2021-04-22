@@ -5874,6 +5874,7 @@ let store = Immutable.Map({
 });
 let lastImage;
 let lastRover = 'curiosity';
+let roverTracker = 'curiosity';
 let startIndex = 0;
 
 // add our markup to the page
@@ -5998,10 +5999,7 @@ const SpiritImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'spirit')
   }
-  if (lastRover != mars.curiosity['photos'][0].rover.name.toLowerCase()) {
-    startIndex = 0
-  }
-  const rover = getRoverImagesSlice(mars.curiosity['photos'])
+  const rover = getRoverImagesSlice(mars.spirit['photos'])
   return roverHTML(rover, 'spirit')
 }
 
@@ -6010,10 +6008,7 @@ const OpportunityImages = (state) => {
   if (!mars) {
     mars = getRoverImages(state, 'opportunity')
   }
-  if (lastRover != mars.curiosity['photos'][0].rover.name.toLowerCase()) {
-    startIndex = 0
-  }
-  const rover = getRoverImagesSlice(mars.curiosity['photos'])
+  const rover = getRoverImagesSlice(mars.opportunity['photos'])
   return roverHTML(rover, 'opportunity')
 }
 
@@ -6059,8 +6054,6 @@ const getRoverImagesSlice = (roverArray) => {
     next.style.display = 'none';
     previous.style.display = 'none';
   }
-
-  console.log(idx, startIndex)
   return arraySlice
 }
 
