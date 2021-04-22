@@ -5874,8 +5874,9 @@ let store = Immutable.Map({
 });
 let lastImage;
 let lastRover = 'curiosity';
-let roverTracker = 'curiosity';
 let startIndex = 0;
+let clicks = 0;
+let previousClicks = 0;
 
 // add our markup to the page
 const root = document.getElementById('root')
@@ -5966,12 +5967,13 @@ const ImageOfTheDay = (apod) => {
 
 const roverHTML = (roverArray, name) => {
   let element;
-  if (lastImage == undefined || lastRover != roverArray[0].rover.name.toLowerCase()) {
+  if (lastImage == undefined || lastRover != roverArray[0].rover.name.toLowerCase() || previousClicks != clicks) {
     lastImage = roverArray[0]
   }
-  if (lastRover != roverArray[0].rover.name) {
+  if (lastRover != roverArray[0].rover.name.toLowerCase()) {
     lastRover = roverArray[0].rover.name.toLowerCase()
   }
+  previousClicks = clicks
   expandedImg.src = lastImage.img_src
   const thumbnails = (image, index) => {
     const imageID = 'image' + index
@@ -6030,11 +6032,13 @@ const getRoverImagesSlice = (roverArray) => {
   const nextClick = () => {
     idx += 5
     startIndex = idx
+    clicks++
     arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
   }
   const previousClick = () => {
     idx -= 5
     startIndex = idx
+    clicks++
     arraySlice = arraySlice.map((item, ind) => roverArray[ind+idx])
   }
   if (roverArray[idx+5] != undefined && idx >=5) {
