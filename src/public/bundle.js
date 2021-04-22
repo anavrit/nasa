@@ -5870,11 +5870,8 @@ const Immutable = require('immutable');
 let store = Immutable.Map({
     rover: '',
     mars: '',
-    startIndex: 0,
-    clicks: 0
+    startIndex: 0
 });
-let lastImage;
-let previousClicks = 0;
 
 // add our markup to the page
 const root = document.getElementById('root')
@@ -5895,7 +5892,8 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let newState = state.set('rover', roverName.value)
+    const newState = state.set('rover', roverName.value)
+    store = store.merge(newState)
     return `
         <main>
           ${MarsImages(newState)}
@@ -5910,15 +5908,22 @@ window.addEventListener('load', () => {
 
 roverName.onchange = () => {
   const newState = store.set('rover', roverName.value).set('startIndex', 0)
-  updateStore(store, newState)
+  const newerState = newState.set('mars', getRoverImages(roverName.value))
+  updateStore(store, newerState)
 }
 
 const nextClick = () => {
-  return console.log("Next")
+  const newStartIndex = store.get('startIndex') + 5
+  const newState = store.set('startIndex', newStartIndex)
+  updateStore(store, newState)
 }
+
 const previousClick = () => {
-  return console.log("Previous")
+  const newStartIndex = store.get('startIndex') - 5
+  const newState = store.set('startIndex', newStartIndex)
+  updateStore(store, newState)
 }
+
 next.addEventListener('click', nextClick)
 previous.addEventListener('click', previousClick)
 
@@ -5949,18 +5954,18 @@ const roverHTML = (state, roverArraySlice) => {
 }
 
 const MarsImages = (state) => {
+  let rover = state.get('rover')
   let mars = state.get('mars')
-  const rover = state.get('rover')
   if (mars==='') {
     mars = getRoverImages(rover)
   }
-  const roverArraySlice = getRoverImagesSlice(store, mars[rover]['photos'])
+  const roverArraySlice = getRoverImagesSlice(state, mars[rover]['photos'])
   return roverHTML(state, roverArraySlice)
 }
 
 const getRoverImagesSlice = (state, roverArray) => {
   const rover = state.get('rover')
-  let idx = state.get('startIndex')
+  const idx = state.get('startIndex')
   let arraySlice = roverArray.slice(idx,idx+5)
   return arraySlice
 }
