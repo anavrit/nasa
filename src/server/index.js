@@ -26,8 +26,10 @@ app.get('/manifest/curiosity', async (req, res) => {
 
 app.get('/curiosity', async (req, res) => {
   try {
-    let sol = maxsol()
-    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=3096&api_key=${process.env.API_KEY}`)
+    let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity/?api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+    const maxSol = manifest['photo_manifest'].max_sol
+    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${maxSol}&api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { curiosity })
   } catch (err) {
