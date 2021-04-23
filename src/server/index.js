@@ -13,9 +13,19 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
+app.get('/manifest/curiosity', async (req, res) => {
+  try {
+    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity/?api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+        res.send( { curiosity })
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
+
 app.get('/curiosity', async (req, res) => {
   try {
-    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
+    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=3096&api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { curiosity })
   } catch (err) {

@@ -5870,6 +5870,7 @@ const Immutable = require('immutable');
 let store = Immutable.Map({
     rover: '',
     mars: '',
+    manifest: '',
     startIndex: 0
 });
 
@@ -5909,7 +5910,9 @@ window.addEventListener('load', () => {
 roverName.onchange = () => {
   const newState = store.set('rover', roverName.value).set('startIndex', 0)
   const newerState = newState.set('mars', getRoverImages(roverName.value))
-  updateStore(store, newerState)
+  const temp = getRoverManifest(roverName.value)
+  const newestState = newerState.set('manifest', temp)
+  updateStore(store, newestState)
 }
 
 const nextClick = () => {
@@ -5929,7 +5932,9 @@ previous.addEventListener('click', previousClick)
 
 const roverHTML = (state, roverArraySlice) => {
   let element;
+  const rover = state.get('rover')
   let expandedImage = roverArraySlice[0]
+  const manifestInfo = state.getIn(['manifest', rover, 'photo_manifest'])
   expandedImg.src = roverArraySlice[0].img_src
   const displayImages = (image, index) => {
     const imageID = 'image' + index
@@ -5947,7 +5952,9 @@ const roverHTML = (state, roverArraySlice) => {
       <div id='imgText'>
         <p><strong>Status:</strong> ${expandedImage.rover.status}</p>
         <p><strong>Camera:</strong> ${expandedImage.camera.full_name}</p>
-        <p><strong>Earth date:</strong> ${expandedImage.earth_date}</p>
+        <p><strong>Date of latest photos:</strong> ${manifestInfo.max_date}</p>
+        <p><strong>Date of displayed photos:</strong> ${expandedImage.earth_date}</p>
+        <p><strong>Number of photos:</strong> ${manifestInfo.photos.slice(-1)[0]['total_photos']}</p>
         <p><strong>Landing date:</strong> ${expandedImage.rover.landing_date}</p>
         <p><strong>Launch date:</strong> ${expandedImage.rover.launch_date}</p>
       </div>
@@ -5957,8 +5964,12 @@ const roverHTML = (state, roverArraySlice) => {
 const MarsImages = (state) => {
   let rover = state.get('rover')
   let mars = state.get('mars')
+  let manifest = state.get('manifest')
   if (mars==='') {
     mars = getRoverImages(rover)
+  }
+  if (manifest==='') {
+    manifest = getRoverManifest(rover)
   }
   const roverArraySlice = getRoverImagesSlice(state)
   return roverHTML(state, roverArraySlice)
@@ -5997,6 +6008,13 @@ const getRoverImages = (rover) => {
     .then(res => res.json())
     .then(mars => updateStore(store, { mars }))
   return mars
+}
+
+const getRoverManifest = (rover) => {
+  fetch(`http://localhost:3000/manifest/${rover}`)
+    .then(res => res.json())
+    .then(manifest => updateStore(store, { manifest }))
+  return manifest
 }
 
 },{"immutable":1}]},{},[2]);
