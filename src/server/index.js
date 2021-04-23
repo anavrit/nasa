@@ -6,6 +6,7 @@ const path = require('path')
 
 const app = express()
 const port = 3000
+let randomSpirit, randomOpportunity;
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -25,6 +26,7 @@ app.get('/manifest/curiosity', async (req, res) => {
 
 app.get('/curiosity', async (req, res) => {
   try {
+    let sol = maxsol()
     let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=3096&api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { curiosity })
@@ -33,9 +35,9 @@ app.get('/curiosity', async (req, res) => {
   }
 })
 
-app.get('/opportunity', async (req, res) => {
+app.get('/manifest/opportunity', async (req, res) => {
   try {
-    let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?sol=10&api_key=${process.env.API_KEY}`)
+    let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Opportunity/?api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { opportunity })
   } catch (err) {
@@ -43,9 +45,31 @@ app.get('/opportunity', async (req, res) => {
   }
 })
 
+app.get('/opportunity', async (req, res) => {
+  try {
+    randomOpportunity = Math.floor(Math.random() * 5111)
+    let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?sol=${randomOpportunity}&api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+        res.send( { opportunity })
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
+
+app.get('/manifest/spirit', async (req, res) => {
+  try {
+    let spirit = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Spirit/?api_key=${process.env.API_KEY}`)
+        .then(res => res.json())
+        res.send( { spirit })
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
+
 app.get('/spirit', async (req, res) => {
   try {
-    let spirit = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=10&api_key=${process.env.API_KEY}`)
+    randomSpirit = Math.floor(Math.random() * 2208)
+    let spirit = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?sol=${randomSpirit}&api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { spirit })
   } catch (err) {
