@@ -42,7 +42,10 @@ img {
   text-align: center;
 }
 
-/* With some help from w3schools custom-select css */
+/***
+   Adapted from w3schools custom-select css
+   https://www.w3schools.com/howto/howto_custom_select.asp
+***/
 #roverName {
   width: 200px;
   height: 33px;
