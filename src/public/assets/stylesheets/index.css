@@ -42,10 +42,6 @@ img {
   text-align: center;
 }
 
-optgroup {
-  font-family: 'Oswald', sans-serif;
-}
-
 /* With some help from w3schools custom-select css */
 #roverName {
   width: 200px;
@@ -53,8 +49,8 @@ optgroup {
   color: #ffffff;
   padding: 0px 6px;
   padding-bottom: 3px;
+  font-size: 16px;
   font-family: 'Oswald', sans-serif;
-  font-size: 17px;
   border: 1px solid transparent;
   border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
   cursor: pointer;
