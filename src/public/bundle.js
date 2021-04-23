@@ -5931,16 +5931,17 @@ const roverHTML = (state, roverArraySlice) => {
   let element;
   let expandedImage = roverArraySlice[0]
   expandedImg.src = roverArraySlice[0].img_src
-  const thumbnails = (image, index) => {
+  const displayImages = (image, index) => {
     const imageID = 'image' + index
     element = document.getElementById(imageID)
-    element.src = image.img_src
+    element.src = image
     element.addEventListener('click', function() {
-      expandedImg.src = image.img_src
-      expandedImage = image
+      expandedImg.src = image
+      expandedImage = roverArraySlice[index]
     })
   }
-  roverArraySlice.forEach(thumbnails)
+  const roverImages = roverArraySlice.map(item => item.img_src)
+  roverImages.forEach(displayImages)
   showOrHideButtons(state)
   return (`
       <div id='imgText'>
@@ -5959,13 +5960,14 @@ const MarsImages = (state) => {
   if (mars==='') {
     mars = getRoverImages(rover)
   }
-  const roverArraySlice = getRoverImagesSlice(state, mars[rover]['photos'])
+  const roverArraySlice = getRoverImagesSlice(state)
   return roverHTML(state, roverArraySlice)
 }
 
-const getRoverImagesSlice = (state, roverArray) => {
+const getRoverImagesSlice = (state) => {
   const rover = state.get('rover')
   const idx = state.get('startIndex')
+  const roverArray = state.getIn(['mars', rover, 'photos'])
   let arraySlice = roverArray.slice(idx,idx+5)
   return arraySlice
 }
