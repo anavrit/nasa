@@ -8,6 +8,14 @@ body {
   min-height: 100vh;
 }
 
+.bg {
+  background-image: url('/assets/images/mars.jpg');
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 header {
   padding-bottom: 10px;
 }
@@ -35,7 +43,12 @@ img {
   display: block;
   margin: 0 auto;
   width: 200px;
+  font-family: 'Oswald', sans-serif;
   text-align: center;
+}
+
+optgroup {
+  font-family: 'Oswald', sans-serif;
 }
 
 /* With some help from w3schools custom-select css */
@@ -43,7 +56,8 @@ img {
   width: 200px;
   height: 33px;
   color: #ffffff;
-  padding: 0px 8px;
+  padding: 0px 6px;
+  padding-bottom: 3px;
   font-family: 'Oswald', sans-serif;
   font-size: 17px;
   border: 1px solid transparent;
@@ -106,20 +120,30 @@ footer {
 }
 
 .buttons {
-  margin-top: 10px;
-  font-family: 'Oswald', sans-serif;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 0px;
 }
 
 #previous {
   float: left;
   width: 100px;
+  background-color: #008CBA;
+  font-family: 'Oswald', sans-serif;
   display: none;
+  cursor: pointer;
 }
 
 #next {
   float: right;
+  background-color: #4CAF50;
   width: 100px;
+  font-family: 'Oswald', sans-serif;
   display: none;
+  cursor: pointer;
 }
 
 /* -------------------  TABLET  --------------------- */
