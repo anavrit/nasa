@@ -13,16 +13,6 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
-app.get('/manifest/curiosity', async (req, res) => {
-  try {
-    let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity/?api_key=${process.env.API_KEY}`)
-        .then(res => res.json())
-        res.send( { curiosity })
-  } catch (err) {
-    console.log('error:', err)
-  }
-})
-
 app.get('/curiosity', async (req, res) => {
   try {
     let curiosity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=${process.env.API_KEY}`)
@@ -33,31 +23,11 @@ app.get('/curiosity', async (req, res) => {
   }
 })
 
-app.get('/manifest/opportunity', async (req, res) => {
-  try {
-    let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Opportunity/?api_key=${process.env.API_KEY}`)
-        .then(res => res.json())
-        res.send( { opportunity })
-  } catch (err) {
-    console.log('error:', err)
-  }
-})
-
 app.get('/opportunity', async (req, res) => {
   try {
     let opportunity = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/latest_photos?api_key=${process.env.API_KEY}`)
         .then(res => res.json())
         res.send( { opportunity })
-  } catch (err) {
-    console.log('error:', err)
-  }
-})
-
-app.get('/manifest/spirit', async (req, res) => {
-  try {
-    let spirit = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Spirit/?api_key=${process.env.API_KEY}`)
-        .then(res => res.json())
-        res.send( { spirit })
   } catch (err) {
     console.log('error:', err)
   }

@@ -9,13 +9,6 @@ let store = Immutable.Map({
     startIndex: 0
 });
 
-// Object to hold manifest data on rovers
-let manifest = {
-  curiosity: '',
-  spirit: '',
-  opportunity: ''
-};
-
 // Adding html elements to page
 const root = document.getElementById('root')
 const roverName = document.getElementById('roverName');
@@ -23,12 +16,6 @@ const expandedImg = document.getElementById('expandedImg');
 const imgText = document.getElementById('imgText');
 const previous = document.getElementById('previous');
 const next = document.getElementById('next');
-
-// Updating the manifest object
-const updateManifest = (manifest, roverManifest, rover) => {
-    manifest[rover] = roverManifest[rover]
-    render(root, store)
-}
 
 // Updating the store object
 const updateStore = (store, newState) => {
@@ -88,7 +75,6 @@ const roverHTML = (state, roverArraySlice) => {
   const rover = state.get('rover')
   const roverPhotos = state.get(rover)
   let expandedImage = roverArraySlice[0]
-  const manifestInfo = manifest[rover]['photo_manifest']
   expandedImg.src = roverArraySlice[0].img_src
   const displayImages = (image, index) => {
     const imageID = 'image' + index
@@ -106,9 +92,8 @@ const roverHTML = (state, roverArraySlice) => {
       <div id='imgText'>
         <p><strong>Status:</strong> ${expandedImage.rover.status}</p>
         <p><strong>Camera:</strong> ${expandedImage.camera.full_name}</p>
-        <p><strong>Date of latest photos:</strong> ${manifestInfo.max_date}</p>
-        <p><strong>Date of displayed photos:</strong> ${expandedImage.earth_date}</p>
-        <p><strong>Number of photos:</strong> ${roverPhotos.photos.length}</p>
+        <p><strong>Date of latest photos:</strong> ${expandedImage.earth_date}</p>
+        <p><strong>Number of photos:</strong> ${roverPhotos.latest_photos.length}</p>
         <p><strong>Landing date:</strong> ${expandedImage.rover.landing_date}</p>
         <p><strong>Launch date:</strong> ${expandedImage.rover.launch_date}</p>
       </div>
@@ -117,12 +102,8 @@ const roverHTML = (state, roverArraySlice) => {
 
 // Updating the state if needed and requesting revised HTML
 const MarsImages = (state) => {
-  let rover = state.get('rover')
-  let marsRover = state.get(rover)
-  let roverManifest = manifest[rover]
-  if (roverManifest==='') {
-    getRoverManifest(rover)
-  }
+  const rover = state.get('rover')
+  const marsRover = state.get(rover)
   if (marsRover==='') {
     getRoverImages(state)
   }
@@ -133,9 +114,9 @@ const MarsImages = (state) => {
 // Generating slices of five images from the full set of images
 const getRoverImagesSlice = (state) => {
   const rover = state.get('rover')
-  const roverArray = state.get(rover).photos
   const idx = state.get('startIndex')
-  let arraySlice = roverArray.slice(idx,idx+5)
+  const roverArray = state.get(rover).latest_photos
+  const arraySlice = roverArray.slice(idx,idx+5)
   return arraySlice
 }
 
@@ -143,7 +124,7 @@ const getRoverImagesSlice = (state) => {
 const showOrHideButtons = (state) => {
   const idx = state.get('startIndex')
   const rover = state.get('rover')
-  const roverArray = state.getIn([rover, 'photos'])
+  const roverArray = state.getIn([rover, 'latest_photos'])
   if (roverArray[idx+5] != undefined && idx >=5) {
     next.style.display = 'block';
     previous.style.display = 'block';
@@ -161,17 +142,9 @@ const showOrHideButtons = (state) => {
 
 // API call for rover images
 const getRoverImages = (state) => {
-  let rover = state.get('rover')
+  const rover = state.get('rover')
   let roverPhotos = state.get(rover)
   fetch(`http://localhost:3000/${rover}`)
     .then(res => res.json())
     .then(roverPhotos => updateStore(store, roverPhotos))
-}
-
-// API call for rover manifest
-const getRoverManifest = (rover) => {
-  let roverManifest = manifest[rover]
-  fetch(`http://localhost:3000/manifest/${rover}`)
-    .then(res => res.json())
-    .then(roverManifest => updateManifest(manifest, roverManifest, rover))
 }
