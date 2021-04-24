@@ -72,13 +72,8 @@ next.addEventListener('click', nextClick)
 previous.addEventListener('click', previousClick)
 
 // Generating the HTML for the app page using the updated state
-const roverHTML = (state, roverArraySlice) => {
-  const rover = state.get('rover')
-  const roverPhotos = state.get(rover)
+const roverHTML = (roverArraySlice) => {
   const roverImages = roverArraySlice.map(item => item.img_src)
-  let expandedImage = roverArraySlice[0]
-  expandedImg.src = roverArraySlice[0].img_src
-  thumbnails.forEach(thumbnail => thumbnail.src = "")
   const displayImages = (image, index) => {
     thumbnails[index].src = image
     thumbnails[index].addEventListener('click', function() {
@@ -86,18 +81,22 @@ const roverHTML = (state, roverArraySlice) => {
       expandedImage = roverArraySlice[index]
     })
   }
+  let expandedImage = roverArraySlice[0]
+  expandedImg.src = roverArraySlice[0].img_src
+  thumbnails.forEach(thumbnail => thumbnail.src = "")
   roverImages.forEach(displayImages)
-  showOrHideButtons(state)
-  return (`
+  return (lengthOfArray) => {
+    return (`
       <div id='imgText'>
         <p><strong>Status:</strong> ${expandedImage.rover.status}</p>
         <p><strong>Camera:</strong> ${expandedImage.camera.full_name}</p>
         <p><strong>Date of latest photos:</strong> ${expandedImage.earth_date}</p>
-        <p><strong>Number of photos:</strong> ${roverPhotos.latest_photos.length}</p>
+        <p><strong>Number of photos:</strong> ${lengthOfArray}</p>
         <p><strong>Landing date:</strong> ${expandedImage.rover.landing_date}</p>
         <p><strong>Launch date:</strong> ${expandedImage.rover.launch_date}</p>
       </div>
-    `)
+        `)
+    }
 }
 
 // Updating the state if needed and requesting revised HTML
@@ -107,8 +106,11 @@ const MarsImages = (state) => {
   if (marsRover==='') {
     getRoverImages(state)
   }
+  const lengthOfArray = marsRover.latest_photos.length
   const roverArraySlice = getRoverImagesSlice(state)
-  return roverHTML(state, roverArraySlice)
+  const getExpandedImage = roverHTML(roverArraySlice)
+  showOrHideButtons(state)
+  return getExpandedImage(lengthOfArray)
 }
 
 // Generating slices of five images from the full set of images
