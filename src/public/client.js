@@ -1,5 +1,4 @@
 const Immutable = require('immutable');
-const { merge } = require('immutable')
 
 // Declaring the Immutable store to hold image data
 let store = Immutable.Map({

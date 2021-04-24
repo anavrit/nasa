@@ -5866,8 +5866,8 @@
 
 },{}],2:[function(require,module,exports){
 const Immutable = require('immutable');
-const { merge } = require('immutable')
 
+// Declaring the Immutable store to hold image data
 let store = Immutable.Map({
     rover: 'curiosity',
     curiosity: '',
@@ -5876,13 +5876,14 @@ let store = Immutable.Map({
     startIndex: 0
 });
 
+// Object to hold manifest data on rovers
 let manifest = {
   curiosity: '',
   spirit: '',
   opportunity: ''
 };
 
-// add our markup to the page
+// Adding html elements to page
 const root = document.getElementById('root')
 const roverName = document.getElementById('roverName');
 const expandedImg = document.getElementById('expandedImg');
@@ -5890,21 +5891,24 @@ const imgText = document.getElementById('imgText');
 const previous = document.getElementById('previous');
 const next = document.getElementById('next');
 
+// Updating the manifest object
 const updateManifest = (manifest, roverManifest, rover) => {
     manifest[rover] = roverManifest[rover]
     render(root, store)
 }
 
+// Updating the store object
 const updateStore = (store, newState) => {
     store = store.merge(newState)
     render(root, store)
 }
 
+// Rendering the app page
 const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
-// create content
+// Creating content for the app page
 const App = (state) => {
     const newState = state.set('rover', roverName.value)
     store = store.merge(newState)
@@ -5920,27 +5924,32 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
+// Reacting to changes in the selected rover
 roverName.onchange = () => {
   const newRover = roverName.value
   const stateOnChange = store.set('rover', newRover).set('startIndex', 0)
   updateStore(store, stateOnChange)
 }
 
+// Rendering the next five images when available
 const nextClick = () => {
   const newStartIndex = store.get('startIndex') + 5
   const newState = store.set('startIndex', newStartIndex)
   updateStore(store, newState)
 }
 
+// Rendering the previous five images when available
 const previousClick = () => {
   const newStartIndex = store.get('startIndex') - 5
   const newState = store.set('startIndex', newStartIndex)
   updateStore(store, newState)
 }
 
+// Adding event listeners to the buttons
 next.addEventListener('click', nextClick)
 previous.addEventListener('click', previousClick)
 
+// Generating the HTML for the app page using the updated state
 const roverHTML = (state, roverArraySlice) => {
   let element;
   const rover = state.get('rover')
@@ -5973,6 +5982,7 @@ const roverHTML = (state, roverArraySlice) => {
     `)
 }
 
+// Updating the state if needed and requesting revised HTML
 const MarsImages = (state) => {
   let rover = state.get('rover')
   let marsRover = state.get(rover)
@@ -5987,6 +5997,7 @@ const MarsImages = (state) => {
   return roverHTML(state, roverArraySlice)
 }
 
+// Generating slices of five images from the full set of images
 const getRoverImagesSlice = (state) => {
   const rover = state.get('rover')
   const roverArray = state.get(rover).photos
@@ -5995,6 +6006,7 @@ const getRoverImagesSlice = (state) => {
   return arraySlice
 }
 
+// Showing or hiding buttons to help the user navigate through the images
 const showOrHideButtons = (state) => {
   const idx = state.get('startIndex')
   const rover = state.get('rover')
@@ -6014,7 +6026,7 @@ const showOrHideButtons = (state) => {
   }
 }
 
-// API call for Rover images
+// API call for rover images
 const getRoverImages = (state) => {
   let rover = state.get('rover')
   let roverPhotos = state.get(rover)
@@ -6023,6 +6035,7 @@ const getRoverImages = (state) => {
     .then(roverPhotos => updateStore(store, roverPhotos))
 }
 
+// API call for rover manifest
 const getRoverManifest = (rover) => {
   let roverManifest = manifest[rover]
   fetch(`http://localhost:3000/manifest/${rover}`)
