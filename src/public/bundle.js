@@ -5953,7 +5953,7 @@ const roverHTML = (roverArraySlice) => {
       expandedImage = roverArraySlice[index]
     })
   }
-  const expandedImage = roverArraySlice[0]
+  let expandedImage = roverArraySlice[0]
   expandedImg.src = roverArraySlice[0].img_src
   thumbnails.forEach(thumbnail => thumbnail.src = "")
   roverImages.forEach(displayImages)
