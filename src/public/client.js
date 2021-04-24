@@ -16,6 +16,7 @@ const expandedImg = document.getElementById('expandedImg');
 const imgText = document.getElementById('imgText');
 const previous = document.getElementById('previous');
 const next = document.getElementById('next');
+const imageID = ['image0', 'image1', 'image2', 'image3', 'image4']
 
 // Updating the store object
 const updateStore = (store, newState) => {
@@ -74,6 +75,10 @@ const roverHTML = (state, roverArraySlice) => {
   let element;
   const rover = state.get('rover')
   const roverPhotos = state.get(rover)
+  const emptyHolders = (id) => {
+    document.getElementById(id).src = ""
+  }
+  imageID.forEach(emptyHolders)
   let expandedImage = roverArraySlice[0]
   expandedImg.src = roverArraySlice[0].img_src
   const displayImages = (image, index) => {
