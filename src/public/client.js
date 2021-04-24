@@ -86,7 +86,7 @@ const roverHTML = (roverArraySlice) => {
       expandedImage = roverArraySlice[index]
     })
   }
-  let expandedImage = roverArraySlice[0]
+  const expandedImage = roverArraySlice[0]
   expandedImg.src = roverArraySlice[0].img_src
   thumbnails.forEach(thumbnail => thumbnail.src = "")
   roverImages.forEach(displayImages)
@@ -110,12 +110,14 @@ const MarsImages = (state) => {
   const marsRover = state.get(rover)
   if (marsRover==='') {
     getRoverImages(state)
+  } else {
+    const lengthOfArray = marsRover.latest_photos.length
+    const roverArraySlice = getRoverImagesSlice(state)
+    const getExpandedImage = roverHTML(roverArraySlice)
+    showOrHideButtons(state)
+    return getExpandedImage(lengthOfArray)
   }
-  const lengthOfArray = marsRover.latest_photos.length
-  const roverArraySlice = getRoverImagesSlice(state)
-  const getExpandedImage = roverHTML(roverArraySlice)
-  showOrHideButtons(state)
-  return getExpandedImage(lengthOfArray)
+  return ""
 }
 
 // Generating slices of five images from the full set of images
@@ -150,7 +152,7 @@ const showOrHideButtons = (state) => {
 // API call for rover images
 const getRoverImages = (state) => {
   const rover = state.get('rover')
-  let roverPhotos = state.get(rover)
+  const roverPhotos = state.get(rover)
   try {
     fetch(`http://localhost:3000/${rover}`)
          .then(res => res.json())
