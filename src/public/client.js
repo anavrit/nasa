@@ -18,6 +18,7 @@ const previous = document.getElementById('previous');
 const next = document.getElementById('next');
 const imageID = ['image0', 'image1', 'image2', 'image3', 'image4']
 const thumbnails = imageID.map(id => document.getElementById(id))
+const tn = 5
 
 // Updating the store object
 const updateStore = (store, newState) => {
@@ -27,7 +28,11 @@ const updateStore = (store, newState) => {
 
 // Rendering the app page
 const render = async (root, state) => {
+  try {
     root.innerHTML = App(state)
+  } catch (err) {
+    console.log('error:', err)
+  }
 }
 
 // Creating content for the app page
@@ -55,14 +60,14 @@ roverName.onchange = () => {
 
 // Rendering the next five images when available
 const nextClick = () => {
-  const newStartIndex = store.get('startIndex') + 5
+  const newStartIndex = store.get('startIndex') + tn
   const newState = store.set('startIndex', newStartIndex)
   updateStore(store, newState)
 }
 
 // Rendering the previous five images when available
 const previousClick = () => {
-  const newStartIndex = store.get('startIndex') - 5
+  const newStartIndex = store.get('startIndex') - tn
   const newState = store.set('startIndex', newStartIndex)
   updateStore(store, newState)
 }
@@ -127,13 +132,13 @@ const showOrHideButtons = (state) => {
   const idx = state.get('startIndex')
   const rover = state.get('rover')
   const roverArray = state.getIn([rover, 'latest_photos'])
-  if (roverArray[idx+5] != undefined && idx >=5) {
+  if (roverArray[idx+tn] != undefined && idx >=tn) {
     next.style.display = 'block';
     previous.style.display = 'block';
-  } else if (roverArray[idx+5] != undefined && idx < 5) {
+  } else if (roverArray[idx+tn] != undefined && idx < tn) {
     next.style.display = 'block';
     previous.style.display = 'none';
-  } else if (roverArray[idx+5] == undefined && idx >= 5) {
+  } else if (roverArray[idx+tn] == undefined && idx >= tn) {
     next.style.display = 'none';
     previous.style.display = 'block';
   } else {
@@ -146,7 +151,11 @@ const showOrHideButtons = (state) => {
 const getRoverImages = (state) => {
   const rover = state.get('rover')
   let roverPhotos = state.get(rover)
-  fetch(`http://localhost:3000/${rover}`)
-    .then(res => res.json())
-    .then(roverPhotos => updateStore(store, roverPhotos))
+  try {
+    fetch(`http://localhost:3000/${rover}`)
+         .then(res => res.json())
+         .then(roverPhotos => updateStore(store, roverPhotos))
+  } catch (err) {
+    console.log('error:', err)
+  }
 }
