@@ -5884,6 +5884,7 @@ const imgText = document.getElementById('imgText');
 const previous = document.getElementById('previous');
 const next = document.getElementById('next');
 const imageID = ['image0', 'image1', 'image2', 'image3', 'image4']
+const thumbnails = imageID.map(id => document.getElementById(id))
 
 // Updating the store object
 const updateStore = (store, newState) => {
@@ -5939,25 +5940,19 @@ previous.addEventListener('click', previousClick)
 
 // Generating the HTML for the app page using the updated state
 const roverHTML = (state, roverArraySlice) => {
-  let element;
   const rover = state.get('rover')
   const roverPhotos = state.get(rover)
-  const emptyHolders = (id) => {
-    document.getElementById(id).src = ""
-  }
-  imageID.forEach(emptyHolders)
+  const roverImages = roverArraySlice.map(item => item.img_src)
   let expandedImage = roverArraySlice[0]
   expandedImg.src = roverArraySlice[0].img_src
+  thumbnails.forEach(thumbnail => thumbnail.src = "")
   const displayImages = (image, index) => {
-    const imageID = 'image' + index
-    element = document.getElementById(imageID)
-    element.src = image
-    element.addEventListener('click', function() {
+    thumbnails[index].src = image
+    thumbnails[index].addEventListener('click', function() {
       expandedImg.src = image
       expandedImage = roverArraySlice[index]
     })
   }
-  const roverImages = roverArraySlice.map(item => item.img_src)
   roverImages.forEach(displayImages)
   showOrHideButtons(state)
   return (`
